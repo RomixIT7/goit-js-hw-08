@@ -18,6 +18,7 @@ img {
   gap: 24px;
   justify-content: center;
   align-items: center;
+  max-width: 1440px;
 }
 
 .gallery-image {
