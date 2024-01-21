@@ -83,28 +83,36 @@ const markup = images
 
 gallery.insertAdjacentHTML("beforeend", markup);
 
-const instance = basicLightbox.create(`
+const instance = basicLightbox.create(
+  `
 	<img class="modal-img" src="" alt="">
-`);
+`,
+  {
+    onShow: (instance) => {
+      document.addEventListener("keydown", onEscClick);
+    },
+
+    onClose: (instance) => {
+      document.removeEventListener("keydown", onEscClick);
+    },
+  }
+);
 
 gallery.addEventListener("click", onImgClick);
 
 function onImgClick(e) {
   e.preventDefault();
-  if (e.target.nodeName !== "IMG") {
-    return;
+  if (e.target.classList.contains("gallery-image")) {
+    const modalImage = instance.element().querySelector(".modal-img");
+    modalImage.src = e.target.dataset.source;
+    modalImage.alt = e.target.alt;
+    instance.show();
   }
-  const modalImage = instance.element().querySelector(".modal-img");
-  modalImage.src = e.target.dataset.source;
-  modalImage.alt = e.target.alt;
-  instance.show();
-  document.addEventListener("keydown", onEscClick);
 }
 
 function onEscClick(e) {
-  if (e.code !== "Escape") {
+  if (e.key !== "Escape") {
     return;
   }
   instance.close();
-  document.removeEventListener("keydown", onEscClick);
 }
